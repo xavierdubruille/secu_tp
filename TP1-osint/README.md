@@ -44,7 +44,8 @@ Livrable : une **fiche de renseignement** sourcée -> le **kit du fraudeur** (so
 - **Mission 6 (phishing kit)** : la fausse page se fabrique et se teste **dans votre VM uniquement**,
   sur la copie locale d'ACME, avec des identifiants bidons. **Aucun lien envoyé**, jamais un vrai site.
 - **10 flags** `ACME{...}` dans la cible locale : ils prouvent que vous avez trouvé, pas que vous avez
-  compris. Le noté, c'est la **fiche**.
+  compris. Le noté, c'est la **fiche**. *(Leur numérotation suit l'ordre probable de découverte, pas
+  l'ordre des missions — pas d'inquiétude si une mission saute des numéros.)*
 - **Compétition** (pour la gloire, pas pour la note) : premier ou première sur un flag ? **Montrez-moi
   l'écran** ou **envoyez-le-moi par Teams** (sans le crier). Votre nom va au tableau.
 - **STOP** : des arrêts rythment la séance — on lâche le clavier, on met en commun, on repart.
@@ -65,12 +66,12 @@ navigateur. **Sur vous-même uniquement**, en lecture seule.
    services (compte Google, etc.) y sont rattachés ?
 4. *(facultatif)* **Reconnaissance faciale** : https://pimeyes.com — seulement si vous le voulez, et
    **votre** visage uniquement, jamais celui d'un autre. On en discutera.
-5. **Dès que votre VM est prête**, un premier outil en **ligne de commande** — à **trouver vous-même**
-   via l'**OSINT Framework** (https://osintframework.com, catégorie *Username*) :
-   ```bash
-   sherlock <votre_pseudo>        # sur quels sites ce pseudo existe-t-il ?
-   ```
-   Combien de comptes oubliés ? Réutiliser le même pseudo partout, quel risque ?
+5. **Votre premier outil Kali — à dénicher vous-même.** Dès que la VM est prête, ouvrez le **menu des
+   applications de Kali** et explorez ses catégories : c'est votre nouvel outil de travail, apprenez à
+   vous y repérer. Trouvez-y un programme **en ligne de commande** qui recherche un **pseudo** sur des
+   dizaines de sites, et lancez-le sur **votre** pseudo. *(Votre prof vous indiquera la catégorie si
+   vous séchez.)* Combien de comptes oubliés retrouvez-vous ? Réutiliser le même pseudo partout, quel
+   risque ?
 
 Puis on se tourne vers une **entreprise**.
 
