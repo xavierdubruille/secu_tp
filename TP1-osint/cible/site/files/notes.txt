@@ -1,2 +1,3 @@
 Pense-bete interne (ne pas publier...).
+TODO (MV) : desactiver l'autoindex de /files/, sinon tout ce dossier reste public.
 jeton de demo (base64) : QUNNRXtiYXNlNjRfZmFjaWxlX2FfbGlyZX0=

@@ -1,2 +1,3 @@
+# rappel (SM) : robots.txt n'interdit rien, il ne fait qu'indiquer. Ce n'est pas une protection - a nettoyer.
 User-agent: *
 Disallow: /interne-old/
