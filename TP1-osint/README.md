@@ -43,9 +43,12 @@ Livrable : une **fiche de renseignement** sourcée -> le **kit du fraudeur** (so
   passage, vous apprendrez des choses sur votre propre école.
 - **Mission 6 (phishing kit)** : la fausse page se fabrique et se teste **dans votre VM uniquement**,
   sur la copie locale d'ACME, avec des identifiants bidons. **Aucun lien envoyé**, jamais un vrai site.
-- **10 flags** `ACME{...}` dans la cible locale : ils prouvent que vous avez trouvé, pas que vous avez
-  compris. Le noté, c'est la **fiche**. *(Leur numérotation suit l'ordre probable de découverte, pas
-  l'ordre des missions — pas d'inquiétude si une mission saute des numéros.)*
+- **10 flags** `ACME{...}` dans la cible locale : c'est le **jeu** (ils prouvent que vous avez *trouvé*,
+  pas que vous avez *compris*). Le **but**, lui, ce sont les **données** que vous récoltez autour de
+  chaque flag : noms, rôles, format d'e-mail, absences, portails… Assemblées, elles forment le **kit du
+  fraudeur** (mission 5), qui arme ensuite le **phishing kit** (mission 6). Le noté, c'est la **fiche
+  sourcée**, pas les flags. *(La numérotation des flags suit l'ordre probable de découverte, pas l'ordre
+  des missions — pas d'inquiétude si une mission saute des numéros.)*
 - **Compétition** (pour la gloire, pas pour la note) : premier ou première sur un flag ? **Montrez-moi
   l'écran** ou **envoyez-le-moi par Teams** (sans le crier). Votre nom va au tableau.
 - **STOP** : des arrêts rythment la séance — on lâche le clavier, on met en commun, on repart.
@@ -69,9 +72,10 @@ navigateur. **Sur vous-même uniquement**, en lecture seule.
 5. **Votre premier outil Kali — à dénicher vous-même.** Dès que la VM est prête, ouvrez le **menu des
    applications de Kali** et explorez ses catégories : c'est votre nouvel outil de travail, apprenez à
    vous y repérer. Trouvez-y un programme **en ligne de commande** qui recherche un **pseudo** sur des
-   dizaines de sites, et lancez-le sur **votre** pseudo. *(Votre prof vous indiquera la catégorie si
-   vous séchez.)* Combien de comptes oubliés retrouvez-vous ? Réutiliser le même pseudo partout, quel
-   risque ?
+   dizaines de sites, et lancez-le sur **votre** pseudo. *(Pour trouver le bon outil : l'annuaire
+   **OSINT Framework** — osintframework.com — classe les outils par objectif, catégorie « Username ».
+   Et votre prof vous indiquera la catégorie du menu Kali si vous séchez.)* Combien de comptes oubliés
+   retrouvez-vous ? Réutiliser le même pseudo partout, quel risque ?
 
 Puis on se tourne vers une **entreprise**.
 
@@ -83,9 +87,19 @@ Votre VM tourne déjà (mise en bouche). On passe à ACME :
 
 1. Récupérez les ressources du TP : `git clone https://github.com/xavierdubruille/secu_tp.git`
    (ou `git pull` si vous l'avez déjà). La cible est dans `secu_tp/TP1-osint/cible`.
-2. Lancez la cible : `cd secu_tp/TP1-osint/cible && docker compose up -d && docker ps`.
-3. Ouvrez `http://localhost:8080`.
-4. Dans votre **dépôt Git perso** : créez `tp1/fiche.md` (modèle en fin d'énoncé), commit, push.
+2. **Docker n'est pas encore installé ?** (fréquent sur une Kali fraîche) Installez-le **une fois** :
+   ```bash
+   sudo apt update
+   sudo apt install -y docker.io docker-compose
+   sudo systemctl enable --now docker
+   sudo usermod -aG docker "$USER"    # puis déconnexion/reconnexion (ou : newgrp docker)
+   ```
+   Un script tout prêt fait la même chose : `bash secu_tp/TP1-osint/cible/install-docker.sh`.
+3. Lancez la cible : `cd secu_tp/TP1-osint/cible && docker compose up -d && docker ps`.
+   *(Selon la version installée, la commande est `docker compose` — avec espace — **ou**
+   `docker-compose` — avec tiret. Les deux font la même chose.)*
+4. Ouvrez `http://localhost:8080`.
+5. Dans votre **dépôt Git perso** : créez `tp1/fiche.md` (modèle en fin d'énoncé), commit, push.
 
 **Point de contrôle** : vous voyez la vitrine d'ACME **et** votre dépôt contient `tp1/fiche.md`.
 
@@ -138,6 +152,11 @@ Trois fichiers ne sont pas ce qu'ils ont l'air d'être.
 - Une **chaîne de caractères** a l'air chiffrée. L'est-elle vraiment ?
 - Un **carré noir et blanc** attend d'être lu.
 
+> **Vos outils ici** (en **ligne de commande** — ils ne sont pas dans les menus de Kali) : `file` (le
+> *vrai* type d'un fichier, par son contenu), `binwalk` puis `unzip` (repérer et extraire un fichier
+> caché dans un autre), `base64 -d` (décoder du base64), `zbarimg` **ou votre téléphone** (lire un QR
+> code). `strings` peut dépanner.
+
 Questions : quelle différence entre **encoder** et **chiffrer** ? Pourquoi ne jamais se fier à
 l'**extension** d'un fichier ?
 
@@ -148,6 +167,11 @@ l'**extension** d'un fichier ?
 La même démarche que sur ACME, mais à l'échelle d'Internet, **en lisant seulement ce qui est public** :
 sur **`ephec.be`**, on ne touche à rien (voir les règles du jeu).
 
+> **Le réflexe « quel outil pour quoi ? »** : gardez **OSINT Framework** (osintframework.com) ouvert.
+> C'est un annuaire d'outils OSINT classés **par objectif** (domaine, e-mail, sous-domaine, archive,
+> réseaux sociaux…). Bloqué sur « par où chercher X ? », il vous oriente — c'est l'outil de votre
+> autonomie.
+
 **A. Le nom de domaine parle** — sur `ephec.be`
 ```bash
 whois ephec.be                 # qui a enregistré le domaine, quand, chez quel registrar
@@ -156,6 +180,12 @@ dig ephec.be TXT +short        # SPF, vérifications de services tiers, indices 
 ```
 Question : rien qu'avec l'enregistrement MX et les TXT, que devinez-vous de l'infrastructure de
 messagerie de l'entreprise ? En quoi est-ce utile à un fraudeur ?
+
+> **Si `whois` ou `dig` ne répondent pas** depuis la VM (leurs ports — 43 et 53 — sont souvent
+> **filtrés par le réseau de l'école**), passez par un service web équivalent, qui lit les mêmes
+> registres publics : whois DNS Belgium (https://www.dnsbelgium.be/fr/whois) pour un `.be`, ou who.is ;
+> pour le DNS, https://mxtoolbox.com (MX, TXT/SPF) ou https://dnschecker.org. Même information, autre
+> chemin.
 
 **B. Les sous-domaines, via les certificats publics**
 - Ouvrez https://crt.sh/?q=ephec.be (**Certificate Transparency** : tout certificat HTTPS émis y est
@@ -177,6 +207,21 @@ site:ephec.be inurl:login               # portails de connexion (inurl:webmail, 
 "@ephec.be"                             # confirmer le format des adresses e-mail
 ```
 Quel dork rapporte le plus à un fraudeur ? Lequel recoupe crt.sh ?
+
+> **Des dorks prêts à l'emploi** : la *Google Hacking Database*
+> (https://www.exploit-db.com/google-hacking-database) en recense des centaines, classés par catégorie
+> (fichiers sensibles, portails, messages d'erreur…). Parcourez-la avec l'œil d'un **testeur
+> d'intrusion** : lesquels tenteriez-vous en premier sur une entreprise, et pourquoi ?
+
+**E. Tout ça, automatiquement : SpiderFoot** *(montré en démo ; à retester chez vous en option)*
+
+`spiderfoot` agrège whois, DNS, crt.sh, moteurs… et **dessine le graphe** des liens trouvés (domaine ->
+sous-domaines -> e-mails -> personnes). Lancez-le en **mode « Passive » uniquement** — les autres modes
+(*Footprint / Investigate / All*) **sondent réellement** la cible, ce qui serait de la reconnaissance
+**active** (hors cadre ici) :
+```bash
+spiderfoot -l 127.0.0.1:5001     # puis, dans le navigateur : New Scan -> type de scan « Passive »
+```
 
 > **RGPD — la limite, ici** : sur un vrai domaine, on cherche l'**infrastructure, les documents, le
 > format des adresses** — **pas** les personnes. L'énumération d'employés ne se fait **que sur ACME**
@@ -231,6 +276,16 @@ cours 1, accepté sur Moodle.)
    affichent.
 6. Regardez la **barre d'adresse** de la page clonée : qu'est-ce qui ne colle pas ?
 
+> **Si, après avoir validé, la page retombe sur SET (ou une page blanche) au lieu du portail ACME** :
+> c'est le comportement **par défaut** de SET. Pour que la fausse page renvoie la « victime » vers le
+> vrai portail local après la capture (le détail qui rend une vraie attaque invisible), éditez la
+> config **avant** de lancer l'outil — `/etc/setoolkit/set.config` (parfois `~/.set/set.config`) :
+> ```text
+> AUTO_DETECT=OFF                                   # pour saisir toi-même l'IP d'écoute (127.0.0.1)
+> HARVESTER_REDIRECT=ON
+> HARVESTER_URL=http://localhost:8080/webmail.html  # le vrai portail ACME local
+> ```
+
 Questions : (a) quel **seul détail** dans le navigateur trahissait la fausse page ? (b) pourquoi la
 **double authentification (MFA)** réduit-elle fortement l'intérêt de cette attaque ? (c) pourquoi un
 **gestionnaire de mots de passe** vous protège-t-il presque automatiquement ?
@@ -241,18 +296,23 @@ Questions : (a) quel **seul détail** dans le navigateur trahissait la fausse pa
 
 ---
 
-## Mission 7 — Se défendre (15 min)
+## Mission 7 (optionnelle) — Se défendre
+
+> **Optionnelle.** Vous avez déjà beaucoup manipulé `exiftool` : la manipulation `mat2` ci-dessous peut
+> se faire **chez vous** (ou être vue en **démo**). En revanche, les **3 recommandations** restent
+> **attendues dans la fiche** (c'est le cœur du rendu).
 
 On apprend l'attaque **pour** défendre.
 
-1. Copiez `siege.jpg`, nettoyez-le avec `mat2`, puis comparez **avant / après** avec `exiftool`.
+1. *(optionnel / démo)* Copiez `siege.jpg`, nettoyez-le avec `mat2`, puis comparez **avant / après**
+   avec `exiftool`.
 2. Dans votre fiche : **3 recommandations concrètes** pour ACME (une par type de fuite), **dont une
    contre le phishing** de la mission 6.
 3. **Une action** que vous allez faire **pour vous** (pseudo, photos, comptes oubliés, MFA).
 
 ---
 
-## Votre rendu (noté)
+## Votre rendu
 
 Dans le **devoir Moodle du TP1** (et dans votre dépôt Git, `tp1/`) :
 
@@ -260,12 +320,15 @@ Dans le **devoir Moodle du TP1** (et dans votre dépôt Git, `tp1/`) :
    une anti-phishing).
 2. **Une capture** d'un résultat marquant + **la commande** qui l'a produit + **une phrase**
    d'explication.
-3. *(bonus, maison)* une **room OSINT** en ligne : **TryHackMe « OhSINT »** (gratuite, ~1 h). Rendez le
+   *(Ça peut prendre une autre forme — quelques captures d'écran, par exemple : vous devez juste
+   montrer que vous avez **fait** le TP.)*
+3. **(BONUS, maison)** une **room OSINT** en ligne : **TryHackMe « OhSINT »** (gratuite, ~1 h). Rendez le
    **drapeau final** + **2-3 captures** montrant *comment* vous avez remonté la piste. Alternative sans
    compte : un défi **Gralhix** (gralhix.com).
 
-**Barème** : **2 pts** (travail de séance) **+ 1 pt bonus** (room OSINT maison). Pas fini en séance ?
-Le devoir reste ouvert : terminez chez vous.
+**Noté** : le barème précis est sur **Moodle**. L'essentiel noté, c'est la **fiche** (travail de
+séance) ; la room OSINT maison compte en **bonus**. Pas fini en séance ? Le devoir reste ouvert :
+terminez chez vous.
 
 ## Modèle de fiche (`tp1/fiche.md`)
 
