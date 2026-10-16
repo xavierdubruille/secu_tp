@@ -24,7 +24,7 @@ découvrir ce qu'un fraudeur peut apprendre sur elle **sans rien pirater**, mesu
 renseignement se transforme en attaque, puis dire comment réduire cette exposition. Vous travaillez sur
 une **copie locale** de son site et de ses fichiers publics.
 
-Livrable : une **fiche de renseignement** sourcée -> le **kit du fraudeur** (son renseignement) -> un
+Livrable : une **fiche de renseignement** sourcée -> le **profil de la cible** (son renseignement) -> un
 **phishing kit** (la fausse page) -> les **parades**.
 
 > MITRE ATT&CK : tactique **Reconnaissance** (TA0043) — techniques *Search Victim-Owned Websites*
@@ -45,8 +45,7 @@ Livrable : une **fiche de renseignement** sourcée -> le **kit du fraudeur** (so
   sur la copie locale d'ACME, avec des identifiants bidons. **Aucun lien envoyé**, jamais un vrai site.
 - **10 flags** `ACME{...}` dans la cible locale : c'est le **jeu** (ils prouvent que vous avez *trouvé*,
   pas que vous avez *compris*). Le **but**, lui, ce sont les **données** que vous récoltez autour de
-  chaque flag : noms, rôles, format d'e-mail, absences, portails… Assemblées, elles forment le **kit du
-  fraudeur** (mission 5), qui arme ensuite le **phishing kit** (mission 6). Le noté, c'est la **fiche
+  chaque flag : noms, rôles, format d'e-mail, absences, portails… Assemblées, elles forment le **profil de la cible** (mission 5), qui arme ensuite le **phishing kit** (mission 6). Le noté, c'est la **fiche
   sourcée**, pas les flags. *(La numérotation des flags suit l'ordre probable de découverte, pas l'ordre
   des missions — pas d'inquiétude si une mission saute des numéros.)*
 - **Compétition** (pour la gloire, pas pour la note) : premier ou première sur un flag ? **Montrez-moi
@@ -116,8 +115,8 @@ Commencez comme un fraudeur : par ce qu'ACME montre **volontairement**.
 Question : parmi vos trouvailles, lesquelles sont publiées **volontairement**, lesquelles sont des
 **fuites** ? Pourquoi la différence compte-t-elle ?
 
-**Pour le kit du fraudeur** (mission 5) : repérez dès maintenant **qui dirige**, **qui paie les
-factures**, le **format des e-mails** et **quand le patron est absent**. Le kit se remplit mission
+**Pour le profil de la cible** (mission 5) : repérez dès maintenant **qui dirige**, **qui paie les
+factures**, le **format des e-mails** et **quand le patron est absent**. Le profil se remplit mission
 après mission.
 
 ---
@@ -135,8 +134,8 @@ ACME publie des photos et des documents. Un fichier contient **plus** que ce qu'
 Questions : pourquoi une photo de téléphone embarque-t-elle une position ? Qu'est-ce qu'un fraudeur
 peut faire d'un **nom de compte Windows** ?
 
-**Pour le kit du fraudeur** : chaque **auteur** de document et chaque **détail interne** (outil, chemin,
-projet en cours) rendra un faux e-mail crédible. Ajoutez-les au kit.
+**Pour le profil de la cible** : chaque **auteur** de document et chaque **détail interne** (outil, chemin,
+projet en cours) rendra un faux e-mail crédible. Ajoutez-les au profil.
 
 ---
 
@@ -233,9 +232,9 @@ spiderfoot -l 127.0.0.1:5001     # puis, dans le navigateur : New Scan -> type d
 
 ---
 
-## Mission 5 — Le kit du fraudeur (20 min) · synthèse
+## Mission 5 — Le profil de la cible (20 min) · synthèse
 
-Mettez-vous **à la place du fraudeur**. Le « kit du fraudeur », c'est son **renseignement** : tout ce
+Mettez-vous **à la place du fraudeur**. Le « profil de la cible », c'est son **renseignement** : tout ce
 qu'il a appris sur ACME (le *phishing kit*, la fausse page, viendra en mission 6). Avec **uniquement**
 ce que vous avez trouvé, complétez dans votre fiche (chaque case **sourcée** : fichier, page, commande) :
 
@@ -316,7 +315,7 @@ On apprend l'attaque **pour** défendre.
 
 Dans le **devoir Moodle du TP1** (et dans votre dépôt Git, `tp1/`) :
 
-1. Votre **fiche** : trouvailles **sourcées** + le **kit du fraudeur** + **3 recommandations** (dont
+1. Votre **fiche** : trouvailles **sourcées** + le **profil de la cible** + **3 recommandations** (dont
    une anti-phishing).
 2. **Une capture** d'un résultat marquant + **la commande** qui l'a produit + **une phrase**
    d'explication.
@@ -344,7 +343,7 @@ terminez chez vous.
 | # | Flag | Où | Comment |
 |---|---|---|---|
 
-## Le kit du fraudeur
+## Le profil de la cible
 (qui viser, au nom de qui, quelle adresse, quand, quels détails, quel portail — chaque ligne sourcée)
 
 ## Le phishing kit (mission 6)
@@ -387,7 +386,7 @@ terminez chez vous.
 3. **Encoder n'est pas chiffrer** ; l'extension ne prouve pas le type d'un fichier.
 4. Ce que des **sources publiques en ligne** révèlent sur une organisation sans la toucher (DNS et
    enregistrement de domaine, certificats via crt.sh, Wayback Machine).
-5. Comment des informations anodines s'assemblent en **kit du fraudeur** (le renseignement), puis en
+5. Comment des informations anodines s'assemblent en **profil de la cible** (le renseignement), puis en
    **phishing kit** (la fausse page) pour une **fraude au CEO** ; et pourquoi « faire attention » ne
    suffit pas (MFA, vérifier l'URL, double validation des virements).
 6. Pour chaque fuite, **une parade** ; et la limite : pas de personne réelle (RGPD).
