@@ -12,13 +12,14 @@
 #     on scanne directement les sous-réseaux Docker depuis Kali (cadre légal).
 #   - ssh : image "cuite" (openssh au build, pas d'apt au démarrage → hors-ligne).
 #
-# Deux segments = deux zones réseau d'ACME (clin d'œil aux zones de Samuel) :
+# Deux segments de laboratoire, directement accessibles depuis Kali (pas de pare-feu interposé) :
 #   acme_dmz  172.21.0.0/24  — services exposés (web, ssh, redis) + un hôte discret
 #   acme_lan  172.22.0.0/24  — segment interne (partages SMB, base RH, SNMP)
 #
-# Marqueur d'unicité (proof-of-work) : exporter MATRICULE avant `up`
+# Hostname interne facultatif : exporter MATRICULE avant `up`
 #   ex.  MATRICULE=12345 docker compose up -d
-# (sinon "000"). Le hostname de la cible web porte alors ce matricule.
+# (sinon "000"). Ce nom interne n’est pas automatiquement révélé par nmap/HTTP.
+# La preuve étudiante porte l’identifiant dans sa fiche, pas une bannière inventée.
 # =============================================================================
 
 services:
@@ -64,8 +65,10 @@ services:
 
   # ---- Segment interne (acme_lan) ------------------------------------------
   # Partages SMB : 'public' (anonyme, lecture) + 'staff' (compte jdoe).
+  # Alias local de l’image Borck épinglée : même contenu, portable via docker save/load.
+  # Créé par charger-images.sh avant distribution.
   smb:
-    image: ghcr.io/servercontainers/samba@sha256:1215a7322d5f1c297b91d47fb3688c3e7f1eaccb2a34d99d42059e23a15bd02d
+    image: tp2-acme-smb:20261020
     container_name: acme-smb
     hostname: acme-smb
     environment:

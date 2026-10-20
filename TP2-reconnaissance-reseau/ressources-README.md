@@ -1,55 +1,77 @@
-# Ressources — cibles du TP2 (réseau d'ACME)
+# Ressources du TP2 — les cibles locales
 
-> Tout ce qu'il faut pour **faire tourner** les cibles du TP2. À lancer dans la VM Kali de l'étudiant.
-> **Doc prof** pour l'origine/les licences ; l'étudiant n'a besoin que de la section « Lancer ».
+Les sept cibles ACME et le serveur Apache se lancent dans **votre VM Kali**, avec Docker Compose.
+Lisez l'énoncé pour les exercices. Dans le dépôt étudiant, le Compose est directement dans
+`~/secu_tp/TP2-reconnaissance-reseau`, à côté de ce fichier `ressources-README.md`.
 
-## Lancer
+## Démarrer avec les images préparées
 
 ```bash
-# Réseau d'ACME (7 cibles, 2 segments) — missions 1 et 2
-MATRICULE=<votre_matricule> docker compose up -d
-# ... TP ...
-docker compose down
+cd ~/secu_tp/TP2-reconnaissance-reseau
+bash verifier-labo.sh
+docker compose up -d --no-build --pull never
+bash verifier-labo.sh --pret
+# Mission 3, quand vous y arrivez :
+docker compose -f apache-cve/docker-compose.yml up -d --no-build --pull never
+```
 
-# Serveur exposé vulnérable (Apache 2.4.49) — mission 3
-cd apache-cve && docker compose up -d --build        # http://127.0.0.1:8080
+Le premier contrôle vérifie les outils, Docker Compose et les images, **sans rien installer**.
+`--pret` attend que les services ACME répondent. Une erreur ? Montrez-la au professeur avec
+`docker compose ps` et `docker compose logs --tail=30`. Ne reconstruisez pas tout pendant l'exercice.
+
+Kali atteint les deux bridges Docker directement. Les cibles ACME ne publient aucun port ; Apache
+publie **seulement** `127.0.0.1:8080`. Ce n'est pas une simulation de pare-feu entre DMZ et LAN.
+L'extension Metasploitable2 utilise son propre Compose et n'est pas nécessaire au tronc commun.
+
+## Préparation des images — avant la séance
+
+Depuis ce dossier, sur le poste qui prépare la distribution :
+
+```bash
+bash charger-images.sh
+```
+
+Le script télécharge les images tierces, construit SSH et Apache, puis exporte `tp2-images.tar.gz`.
+Il conserve exactement l'image Samba épinglée par son digest et lui donne un **nom local exportable**,
+`tp2-acme-smb:20261020`. Cette archive volumineuse se transmet par partage/clé USB, **pas par Git**.
+Les tags tiers peuvent évoluer : préparez une archive commune validée, puis utilisez-la sur les VM.
+
+Sur chaque VM étudiante, avant le cours :
+
+```bash
+bash charger-images.sh --load /chemin/vers/tp2-images.tar.gz
+bash verifier-labo.sh
+```
+
+Les outils nécessaires sont Docker/Compose v2, Nmap, smbclient, client MySQL/MariaDB, snmpwalk,
+tshark, curl, nc et ip. Searchsploit sert à la recherche M3 ; le guide Vulhub et l'avis Apache
+permettent de poursuivre s'il manque. Le script de préparation de VM du cours installe ces outils.
+L'import d'images ne les installe pas.
+
+## Origine, adaptations et licences
+
+| Ressource | Source | Licence conservée |
+|---|---|---|
+| `cibles/` : web, SSH, Redis, hôte discret, SMB, MySQL et SNMP | [Michael Borck, Ethical Hacking Docker Labs](https://github.com/michael-borck/ethical-hacking-docker-labs), week4 et week5 | `LICENSE.borck-MIT` |
+| `apache-cve/` : Apache 2.4.49 / CVE-2021-41773 | [Vulhub](https://github.com/vulhub/vulhub/tree/master/httpd/CVE-2021-41773) | `LICENSE.vulhub-MIT` |
+| `metasploitable/` : extension historique | image référencée `tleemcjr/metasploitable2` | image tierce, pas de copie de ses sources dans ce dépôt |
+
+Les notices MIT accompagnent les copies des cibles : **gardez-les avec les ressources**.
+Les fichiers de données fictives de Borck restent inchangés (ils mentionnent EnumCorp).
+
+Adaptations : Kali remplace le conteneur attaquant ; LDAP est retiré ; les adresses de l'énoncé
+priment sur les guides ; les ports des cibles ACME ne sont pas publiés. SSH est installé au build,
+pas au démarrage. Apache garde la configuration et la requête de traversée du labo Vulhub.
+Ne lancez pas les Compose des guides d'origine en parallèle : leurs adresses peuvent se chevaucher.
+
+## Arrêter
+
+Depuis le dossier TP2 :
+
+```bash
+docker compose -f apache-cve/docker-compose.yml down
+docker compose -f metasploitable/docker-compose.yml down
 docker compose down
 ```
 
-Depuis Kali, on **scanne directement les sous-réseaux Docker** (`172.21.0.0/24`, `172.22.0.0/24`) :
-les cibles ne publient **aucun port** (elles ne sont **pas** exposées hors de la VM). La mission 4
-(Metasploitable2, optionnelle) se lance à la demande — voir l'énoncé.
-
-## Origine et licences (important)
-
-Ces cibles sont des **copies adaptées** de laboratoires **open source**, pour garantir la disponibilité
-hors-ligne et pouvoir traduire/raccourcir l'énoncé. Les **originaux intacts** vivent dans
-`../../../70-labos-sources/` (base de connaissances prof).
-
-| Ce qu'on utilise | Origine | Licence | Fichier |
-|---|---|---|---|
-| `cibles/` (web, ssh, redis, silent, smb, db, snmp) | **Michael Borck — Ethical Hacking Docker Labs** (week4 + week5) | **MIT** | `LICENSE.borck-MIT` |
-| `apache-cve/` (Apache 2.4.49, CVE-2021-41773) | **vulhub** | **MIT** | `LICENSE.vulhub-MIT` |
-| mission 4 (optionnelle) | **Metasploitable 2** (Rapid7) — image **référencée**, non redistribuée | — | — |
-
-> **MIT** : réutilisation/traduction/redistribution libres **à condition de conserver la notice de
-> copyright + la licence** → c'est le rôle des fichiers `LICENSE.*-MIT` de ce dossier, qui doivent
-> **rester** à côté des cibles (y compris dans la copie publiée aux étudiants).
-
-## Adaptations par rapport aux originaux (et pourquoi)
-
-- **Sans conteneur `attacker`** : l'étudiant attaque depuis **sa** VM Kali (donc pas de `make
-  build-base` ni d'`apt` au démarrage côté attaquant).
-- **Sans LDAP** : retiré du périmètre pédagogique du TP2 (concept non vu par les étudiants).
-- **Sans ports publiés** : cibles non exposées hors VM (cadre légal) ; on scanne le sous-réseau Docker.
-- **`ssh` cuit** : openssh installé **au build** (`cibles/ssh/Dockerfile`) → **aucune dépendance
-  internet** en séance.
-- Les **seeds** (partages SMB, `init.sql`, `public.snmprec`, page web) sont **copiés verbatim** de borck
-  (non modifiés) pour ne pas casser le comportement éprouvé.
-
-## Pré-charger les images (séance hors-ligne)
-
-```bash
-./charger-images.sh            # construit/pull puis exporte un tar.gz à distribuer (clé/partage)
-./charger-images.sh --load tp2-images.tar.gz    # côté poste étudiant : importe
-```
+Les scans, votre fiche et le PCAP sont vos résultats : sauvegardez-les dans votre dépôt personnel.

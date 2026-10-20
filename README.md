@@ -22,6 +22,7 @@ Pour mettre à jour plus tard : `git pull`.
 | Dossier | TP |
 |---|---|
 | [`TP1-osint/`](TP1-osint/) | TP1 — OSINT : l'empreinte d'une entreprise, du renseignement au phishing |
+| [`TP2-reconnaissance-reseau/`](TP2-reconnaissance-reseau/) | TP2 — Reconnaissance active : cartographie, énumération et preuve de vulnérabilité |
 
 *(d'autres TP s'ajouteront au fil de l'année)*
 

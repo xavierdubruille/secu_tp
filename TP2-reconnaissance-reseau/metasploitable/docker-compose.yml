@@ -1,0 +1,7 @@
+# Extension facultative : même image et même commande que la démo précédente.
+# Aucun port publié sur la VM ; accès uniquement à l'IP du conteneur local.
+services:
+  ms2:
+    image: tleemcjr/metasploitable2:latest
+    container_name: acme-ms2
+    command: ["/bin/sh", "-c", "/bin/services.sh >/dev/null 2>&1; tail -f /dev/null"]
