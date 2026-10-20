@@ -10,7 +10,8 @@
 #   - PAS de LDAP (retiré : hors périmètre pédagogique du TP2).
 #   - PAS de ports publiés : les cibles ne sont PAS exposées hors de la VM ;
 #     on scanne directement les sous-réseaux Docker depuis Kali (cadre légal).
-#   - ssh : image "cuite" (openssh au build, pas d'apt au démarrage → hors-ligne).
+#   - ssh : image "cuite" (openssh au build, pas d'apt au démarrage).
+#   - versions figées (tags précis, digest Samba) : mêmes cibles que la validation.
 #
 # Deux segments de laboratoire, directement accessibles depuis Kali (pas de pare-feu interposé) :
 #   acme_dmz  172.21.0.0/24  — services exposés (web, ssh, redis) + un hôte discret
@@ -26,7 +27,7 @@ services:
 
   # ---- Segment exposé (acme_dmz) -------------------------------------------
   web:
-    image: httpd:2.4
+    image: httpd:2.4.69
     container_name: acme-web
     hostname: acme-web-${MATRICULE:-000}
     volumes:
@@ -45,7 +46,7 @@ services:
         ipv4_address: 172.21.0.11
 
   redis:
-    image: redis:7
+    image: redis:7.4.11
     container_name: acme-redis
     hostname: acme-redis
     command: ["redis-server"]
@@ -65,9 +66,9 @@ services:
 
   # ---- Segment interne (acme_lan) ------------------------------------------
   # Partages SMB : 'public' (anonyme, lecture) + 'staff' (compte jdoe).
-  # Alias local de l’image Borck épinglée : même contenu, portable via docker save/load.
-  # Créé par charger-images.sh avant distribution.
+  # Image Borck épinglée par digest (cibles/smb/Dockerfile), sous un nom local.
   smb:
+    build: ./cibles/smb
     image: tp2-acme-smb:20261020
     container_name: acme-smb
     hostname: acme-smb

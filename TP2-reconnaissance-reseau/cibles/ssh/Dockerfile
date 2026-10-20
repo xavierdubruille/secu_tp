@@ -1,7 +1,6 @@
 # Cible SSH du segment exposé d'ACME — OpenSSH "cuit" dans l'image.
 # Dérivé de la cible ssh-target de borck (week4), mais openssh est installé AU
-# BUILD (pas d'`apt-get` au démarrage) → la cible est fiable HORS-LIGNE en séance.
-# Build une fois (avec réseau) côté prof, puis `docker save` pour la distribution.
+# BUILD (pas d'`apt-get` au démarrage) : une fois construite, la cible démarre sans réseau.
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive

@@ -26,18 +26,23 @@ if ! docker info >/dev/null 2>&1; then
 fi
 docker compose config --quiet
 docker compose -f apache-cve/docker-compose.yml config --quiet
-while IFS= read -r img; do
-  if ! docker image inspect "$img" >/dev/null 2>&1; then
-    printf 'IMAGE MANQUANTE : %s\n' "$img"
-    missing=1
-  fi
-done < <(docker compose config --images; docker compose -f apache-cve/docker-compose.yml config --images)
 if (( missing )); then
-  printf 'Arrêt : charger les images / préparer les outils avant le travail. Voir ressources-README.md.\n'
+  printf 'Arrêt : préparer les outils avant le travail. Voir ressources-README.md.\n'
   exit 1
 fi
-printf 'OK : outils, Docker et images du tronc commun présents.\n'
-printf 'Démarrer : docker compose up -d --no-build --pull never\n'
+absent=0
+while IFS= read -r img; do
+  if ! docker image inspect "$img" >/dev/null 2>&1; then
+    printf 'À TÉLÉCHARGER : %s\n' "$img"
+    absent=1
+  fi
+done < <(docker compose config --images; docker compose -f apache-cve/docker-compose.yml config --images)
+if (( absent )); then
+  printf 'OK : outils et Docker présents. Images absentes : le premier lancement les télécharge (connexion requise).\n'
+else
+  printf 'OK : outils, Docker et images du tronc commun présents.\n'
+fi
+printf 'Démarrer : docker compose up -d\n'
 printf 'MySQL et Samba peuvent demander environ 90 secondes au premier lancement.\n'
 
 if [[ "${1:-}" == "--pret" ]]; then

@@ -51,12 +51,13 @@ git pull
 cd ~/secu_tp/TP2-reconnaissance-reseau
 bash verifier-labo.sh
 mkdir -p ~/tp2-traces
-docker compose up -d --no-build --pull never
+docker compose up -d
 docker compose ps
 bash verifier-labo.sh --pret
 ```
 
-> Les images doivent avoir été préparées ou chargées avant le cours. Un outil ou une image manque ?
+> Faites un premier lancement **avant le cours** (voir `ressources-README.md`) : il télécharge les
+> images, environ 500 Mo ; les lancements suivants n'ont plus besoin du réseau. Un outil manque ?
 > Signalez-le au professeur : ne passez pas le bloc d'exercices à réinstaller votre environnement.
 > MySQL et Samba peuvent demander environ 90 secondes au premier démarrage ; commencez par le
 > premier segment. Si le site du TP1 tourne encore sur 8080, arrêtez **ce labo TP1** avant la mission 3.
@@ -110,6 +111,9 @@ sudo nmap -sU -sV -p161 172.22.0.14
 
 ### 1c — Comparer deux façons de scanner
 
+> **Exercice à garder pour la fin.** Revenez-y une fois le reste du TP terminé : il ne révèle
+> aucun nouveau port, c'est une comparaison de méthode, pas une étape pour avancer dans la carte.
+
 Sur **la même cible et les mêmes ports**, comparez SYN et TCP connect :
 
 ```bash
@@ -157,6 +161,10 @@ smbclient -L //172.22.0.13 -U '%' -N
 smbclient //172.22.0.13/public -U '%' -N -c 'ls; get policy.txt -'
 smbclient //172.22.0.13/staff -U '%' -N -c 'ls'
 ```
+
+> `smbclient -L` affiche la liste des partages, **puis** un échec de négociation SMB1
+> (`NT_STATUS_INVALID_NETWORK_RESPONSE`) : c'est normal, le serveur refuse ce vieux protocole.
+> Le résultat utile, ce sont les partages listés au-dessus.
 
 Quels partages existent ? Lequel se lit en invité ? Le refus sur `staff` est un **résultat attendu**,
 pas une panne. Notez les informations utiles que le document public révèle.
@@ -276,7 +284,7 @@ Depuis le dossier du TP2, lancez le serveur local et relevez sa bannière :
 
 ```bash
 cd ~/secu_tp/TP2-reconnaissance-reseau
-docker compose -f apache-cve/docker-compose.yml up -d --no-build --pull never
+docker compose -f apache-cve/docker-compose.yml up -d
 curl -sS -I http://127.0.0.1:8080/
 ```
 
@@ -314,15 +322,19 @@ docker compose -f apache-cve/docker-compose.yml logs --tail=30 apache
 
 ## Mission 4 — Extension : d'un vieux service à un shell (~10–15 min)
 
-**Facultative ; démo si le temps le permet.** La fiche et les points normaux du TP n'en dépendent pas.
+**Facultative ; pour les groupes qui terminent en avance.** La fiche et les points normaux du TP n'en dépendent pas.
 Cette cible historique a été conservée pour rendre l'accès à un shell immédiatement visible.
+Son image pèse environ 600 Mo : téléchargez-la avant le cours si vous comptez la faire.
 
 ```bash
 cd ~/secu_tp/TP2-reconnaissance-reseau
-docker compose -f metasploitable/docker-compose.yml up -d --pull never
+docker compose -f metasploitable/docker-compose.yml up -d
 MS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' acme-ms2)
 nmap -sV -p21 "$MS"
 ```
+
+> La cible historique démarre ses services en ~10–15 s après le `up`. Si `nmap` ne voit pas
+> encore le port 21, relancez le scan une fois.
 
 La cible contient la variante compromise de vsftpd 2.3.4 : un nom d'utilisateur finissant par `:)`
 déclenche la backdoor. Ce n'est pas une propriété de toute installation portant ce numéro de version.
