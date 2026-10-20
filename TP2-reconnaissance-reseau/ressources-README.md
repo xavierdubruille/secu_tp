@@ -7,7 +7,9 @@ Lisez l'énoncé pour les exercices. Dans le dépôt étudiant, le Compose est d
 ## Démarrer
 
 ```bash
-cd ~/secu_tp/TP2-reconnaissance-reseau
+sudo apt update; sudo apt install -y docker.io docker-compose
+git clone https://github.com/xavierdubruille/secu_tp.git
+cd secu_tp/TP2-reconnaissance-reseau
 bash verifier-labo.sh
 docker compose up -d
 bash verifier-labo.sh --pret
@@ -16,8 +18,7 @@ docker compose -f apache-cve/docker-compose.yml up -d
 ```
 
 Le premier contrôle vérifie les outils et Docker Compose, et liste les images encore à télécharger,
-**sans rien installer**. `--pret` attend que les services ACME répondent. Une erreur ? Montrez-la au
-professeur avec `docker compose ps` et `docker compose logs --tail=30`.
+**sans rien installer**. `--pret` attend que les services ACME répondent. Une erreur ? Lisez les puis montrez-les moi (ou mieux, montrez les à une IA avec avec `docker compose ps` et `docker compose logs --tail=30` et en lui demandant si elle a besoin d'autre chose pour diagnostiquer le problème).
 
 Kali atteint les deux bridges Docker directement. Les cibles ACME ne publient aucun port ; Apache
 publie **seulement** `127.0.0.1:8080`. Ce n'est pas une simulation de pare-feu entre DMZ et LAN.
@@ -74,4 +75,4 @@ docker compose -f metasploitable/docker-compose.yml down
 docker compose down
 ```
 
-Les scans, votre fiche et le PCAP sont vos résultats : sauvegardez-les dans votre dépôt personnel.
+Les scans, votre fiche et le PCAP sont vos résultats : sauvegardez-les dans votre dépôt personnel (ou où vous voulez)

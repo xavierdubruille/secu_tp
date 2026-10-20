@@ -23,20 +23,13 @@ point de départ : ce qui compte est ce que vous pouvez conclure à partir de so
 exposé (*Initial Access*) décrivent des comportements possibles. ATT&CK est une **matrice**, pas une
 suite obligatoire. Un même outil peut servir plusieurs objectifs selon le contexte.
 
-## Ancrage actualité
-
-En septembre 2026, [Belnet décrit un incident lié à une zero-day chez son fournisseur Fortinet](https://www.belnet.be/en/news-events/news/security-and-privacy-incident-affecting-belnets-it-infrastructure).
-Cela rappelle qu'un service de sécurité peut lui-même être une cible. Notre Apache historique sert
-à comprendre une exploitation reproductible ; il ne reconstitue pas cet incident. Il faudra
-distinguer **faille connue et correctif disponible** d'une **zero-day**, déjà rencontrée au cours 1.
-
 ## Le périmètre du labo
 
 - Cibles autorisées : `172.21.0.0/24` et `172.22.0.0/24`, **uniquement les réseaux Docker de votre VM**.
   Le serveur Apache de la mission 3 est autorisé sur `127.0.0.1:8080`. La mission 4 vise uniquement
   le conteneur local lancé pour cette extension.
 - Jamais le réseau de l'école, `ephec.be`, une IP publique ou la VM d'un camarade.
-- **Kali accède directement aux deux segments.** Cela ne représente pas un accès depuis Internet,
+- **Kali accède directement aux deux segments.** Cela ne représente pas un accès depuis Internet !,
   ni un pare-feu qui filtrerait entre ces segments. Les adresses `.1` sont les passerelles de Kali.
 - Les identités, données et secrets du labo sont fictifs. IA autorisée comme tuteur : vous devez
   pouvoir expliquer ce que vous faites et ce que vous rendez.
@@ -51,8 +44,8 @@ git pull
 cd ~/secu_tp/TP2-reconnaissance-reseau
 bash verifier-labo.sh
 mkdir -p ~/tp2-traces
-docker compose up -d
-docker compose ps
+docker-compose up -d
+docker-compose ps
 bash verifier-labo.sh --pret
 ```
 
@@ -141,7 +134,7 @@ est enregistrée et vous pouvez expliquer une différence entre deux scans.
 **Avant la discussion :** choisissez deux observations utiles à un attaquant **et** à un défenseur.
 Pour chacune, dites aussi ce que votre preuve ne permet pas encore d'affirmer.
 
-**Si vous avancez vite :** dans le guide week4, partie 5, choisissez un script SSH ciblé ; justifiez
+**Si vous avancez vite :** dans le guide week4 (cf lien Borck cité plus haut), partie 5, choisissez un script SSH ciblé ; justifiez
 le choix et comparez à `-sV`. Ne lancez pas tous les scripts ni des scans très lents sur tout le réseau.
 
 > **Mise en commun 1 (~15 min).** Expliquez une observation, ses limites et la prochaine vérification utile.
@@ -188,17 +181,6 @@ avec root ne prouve pas qu'un invité peut les lire.
 mysql -h 172.22.0.12 -u root -p'enumR0ot' --skip-ssl
 ```
 
-Dans le client SQL :
-
-```sql
-SHOW DATABASES;
-USE employees;
-SHOW TABLES;
-SELECT * FROM salaries;
-SELECT * FROM system_config;
-exit
-```
-
 Quelle donnée métier est sensible ? Quel **secret technique** est stocké de façon lisible ?
 Reliez le compte mentionné dans SMB à la configuration de sauvegarde. Distinguez ce que vous avez
 **prouvé** et ce qui resterait à vérifier : vous n'avez pas testé ce secret sur un autre service.
@@ -222,7 +204,7 @@ précisez la condition d'accès et une protection adaptée ; ne classez pas tout
 **Avant la discussion :** quelle petite correction limiterait chaque exposition, et quel accès
 légitime faut-il préserver ? La comparaison invité/compte autorisé sur `staff` donne déjà un exemple.
 
-**Si vous avancez vite :** comparez l'annuaire SMB aux tables `employees` et `departments`, ou
+**Si vous avancez correctement :-)** comparez l'annuaire SMB aux tables `employees` et `departments`, ou
 explorez les interfaces SNMP avec `snmpwalk -v2c -c public 172.22.0.14 1.3.6.1.2.1.2`.
 Rédigez un lien entre deux sources sans inventer un accès que vous n'avez pas testé.
 
@@ -284,7 +266,7 @@ Depuis le dossier du TP2, lancez le serveur local et relevez sa bannière :
 
 ```bash
 cd ~/secu_tp/TP2-reconnaissance-reseau
-docker compose -f apache-cve/docker-compose.yml up -d
+docker-compose -f apache-cve/docker-compose.yml up -d
 curl -sS -I http://127.0.0.1:8080/
 ```
 
@@ -313,7 +295,7 @@ et une vulnérabilité confirmée par ce test ?
 **Si vous avancez vite :** retrouvez la requête et son horodatage dans la trace du serveur :
 
 ```bash
-docker compose -f apache-cve/docker-compose.yml logs --tail=30 apache
+docker-compose -f apache-cve/docker-compose.yml logs --tail=30 apache
 ```
 
 > **Mise en commun 3 (~10 min).** Une preuve, un impact précis, une protection et les limites restantes.
@@ -322,13 +304,13 @@ docker compose -f apache-cve/docker-compose.yml logs --tail=30 apache
 
 ## Mission 4 — Extension : d'un vieux service à un shell (~10–15 min)
 
-**Facultative ; pour les groupes qui terminent en avance.** La fiche et les points normaux du TP n'en dépendent pas.
+**Facultative ; pour les groupes qui terminent en avance.** 
 Cette cible historique a été conservée pour rendre l'accès à un shell immédiatement visible.
-Son image pèse environ 600 Mo : téléchargez-la avant le cours si vous comptez la faire.
+Son image pèse environ 600 Mo : téléchargez-la dés que possible si vous comptez la faire.
 
 ```bash
 cd ~/secu_tp/TP2-reconnaissance-reseau
-docker compose -f metasploitable/docker-compose.yml up -d
+docker-compose -f metasploitable/docker-compose.yml up -d
 MS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' acme-ms2)
 nmap -sV -p21 "$MS"
 ```
@@ -365,12 +347,12 @@ Faites apparaître votre matricule dans la preuve, par exemple avec
 `echo "TP2 - VOTRE_MATRICULE"` dans le terminal avant de rejouer la commande retenue.
 Les approfondissements ne remplacent pas une explication du travail commun.
 
-**Nettoyer à la fin**, depuis le dossier TP2 :
+**Nettoyer à la fin**, depuis le dossier TP2 (mais si vous êtes en non-persistant, on s'en fou un peu):
 
 ```bash
-docker compose -f apache-cve/docker-compose.yml down
-docker compose -f metasploitable/docker-compose.yml down
-docker compose down
+docker-compose -f apache-cve/docker-compose.yml down
+docker-compose -f metasploitable/docker-compose.yml down
+docker-compose down
 ```
 
 ## Pour l'examen

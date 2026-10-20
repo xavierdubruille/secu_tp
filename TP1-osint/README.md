@@ -29,8 +29,9 @@ Livrable : une **fiche de renseignement** sourcée -> le **profil de la cible** 
 
 > MITRE ATT&CK : tactique **Reconnaissance** (TA0043) — techniques *Search Victim-Owned Websites*
 > (T1594), *Gather Victim Identity Information* (T1589), *Search Open Websites/Domains* (T1593),
-> *Gather Victim Org Information* (T1591). La suite logique, *Phishing* (T1566), est abordée en
-> **démonstration encadrée** (mission 6), jamais contre une vraie cible.
+> *Gather Victim Org Information* (T1591). La suite logique, *Phishing for Information* (T1598 : une
+> fausse page qui récolte des identifiants), est abordée en **démonstration encadrée** (mission 6),
+> jamais contre une vraie cible.
 
 ## Règles du jeu
 
