@@ -20,7 +20,7 @@ point de départ : ce qui compte est ce que vous pouvez conclure à partir de so
 
 **Fil rouge ATT&CK.** La reconnaissance active (*Reconnaissance*), l'inventaire des services
 (*Discovery*), la récupération d'un secret (*Credential Access*) et l'exploitation d'un service
-exposé (*Initial Access*) décrivent des comportements possibles. ATT&CK est une **carte**, pas une
+exposé (*Initial Access*) décrivent des comportements possibles. ATT&CK est une **matrice**, pas une
 suite obligatoire. Un même outil peut servir plusieurs objectifs selon le contexte.
 
 ## Ancrage actualité
