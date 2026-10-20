@@ -1,0 +1,18 @@
+# =============================================================================
+# TP2 — Bloc C : serveur exposé d'ACME vulnérable (Apache 2.4.49, CVE-2021-41773)
+# =============================================================================
+# COPIE du laboratoire MIT vulhub (httpd/CVE-2021-41773). Original intact dans
+# 70-labos-sources/vulhub/. Voir LICENSE.vulhub-MIT. L'image se construit à
+# partir de vulhub/httpd:2.4.49 (Dockerfile copié verbatim).
+#
+# Exposé UNIQUEMENT sur la boucle locale de la VM (127.0.0.1:8080) — jamais
+# hors de la VM. Chaîne : bannière -> CVE -> path traversal (une requête curl).
+# =============================================================================
+
+services:
+  apache:
+    build: .
+    image: tp2-acme-apache-2449:latest
+    container_name: acme-apache-cve
+    ports:
+      - "127.0.0.1:8080:80"

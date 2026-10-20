@@ -1,0 +1,119 @@
+# =============================================================================
+# TP2 — Réseau d'ACME (cibles de reconnaissance & d'énumération)
+# =============================================================================
+# Cibles COPIÉES et adaptées depuis le labo MIT de Michael Borck
+# (ethical-hacking-docker-labs, week4 + week5). Originaux intacts dans
+# 70-labos-sources/. Voir README.md + LICENSE.borck-MIT pour l'attribution.
+#
+# Adaptations volontaires (par rapport à borck) :
+#   - PAS de conteneur "attacker" : l'étudiant attaque depuis SA VM Kali.
+#   - PAS de LDAP (retiré : hors périmètre pédagogique du TP2).
+#   - PAS de ports publiés : les cibles ne sont PAS exposées hors de la VM ;
+#     on scanne directement les sous-réseaux Docker depuis Kali (cadre légal).
+#   - ssh : image "cuite" (openssh au build, pas d'apt au démarrage → hors-ligne).
+#
+# Deux segments = deux zones réseau d'ACME (clin d'œil aux zones de Samuel) :
+#   acme_dmz  172.21.0.0/24  — services exposés (web, ssh, redis) + un hôte discret
+#   acme_lan  172.22.0.0/24  — segment interne (partages SMB, base RH, SNMP)
+#
+# Marqueur d'unicité (proof-of-work) : exporter MATRICULE avant `up`
+#   ex.  MATRICULE=12345 docker compose up -d
+# (sinon "000"). Le hostname de la cible web porte alors ce matricule.
+# =============================================================================
+
+services:
+
+  # ---- Segment exposé (acme_dmz) -------------------------------------------
+  web:
+    image: httpd:2.4
+    container_name: acme-web
+    hostname: acme-web-${MATRICULE:-000}
+    volumes:
+      - ./cibles/web:/usr/local/apache2/htdocs:ro
+    networks:
+      acme_dmz:
+        ipv4_address: 172.21.0.10
+
+  ssh:
+    build: ./cibles/ssh
+    image: tp2-acme-ssh:latest
+    container_name: acme-ssh
+    hostname: acme-ssh
+    networks:
+      acme_dmz:
+        ipv4_address: 172.21.0.11
+
+  redis:
+    image: redis:7
+    container_name: acme-redis
+    hostname: acme-redis
+    command: ["redis-server"]
+    networks:
+      acme_dmz:
+        ipv4_address: 172.21.0.13
+
+  # Hôte "discret" : répond au ping mais n'expose aucun service (nuance de découverte).
+  silent:
+    image: alpine:3.22
+    container_name: acme-silent
+    hostname: acme-silent
+    command: ["tail", "-f", "/dev/null"]
+    networks:
+      acme_dmz:
+        ipv4_address: 172.21.0.14
+
+  # ---- Segment interne (acme_lan) ------------------------------------------
+  # Partages SMB : 'public' (anonyme, lecture) + 'staff' (compte jdoe).
+  smb:
+    image: ghcr.io/servercontainers/samba@sha256:1215a7322d5f1c297b91d47fb3688c3e7f1eaccb2a34d99d42059e23a15bd02d
+    container_name: acme-smb
+    hostname: acme-smb
+    environment:
+      - "ACCOUNT_jdoe=Summer2024!"
+      - "UID_jdoe=2000"
+      - "SAMBA_VOLUME_CONFIG_public=[public]; path = /shares/public; read only = yes; guest ok = yes; browseable = yes"
+      - "SAMBA_VOLUME_CONFIG_staff=[staff]; path = /shares/staff; valid users = jdoe; read only = no; browseable = yes; guest ok = no"
+    volumes:
+      - ./cibles/smb/public:/shares/public
+      - ./cibles/smb/staff:/shares/staff
+    networks:
+      acme_lan:
+        ipv4_address: 172.22.0.13
+
+  # Base RH : contient les salaires (données sensibles) + un mot de passe de
+  # backup en clair dans system_config (Credential Access).
+  db:
+    image: mysql:8.0.43
+    container_name: acme-db
+    hostname: acme-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=enumR0ot
+      - MYSQL_DATABASE=employees
+    volumes:
+      - ./cibles/db:/docker-entrypoint-initdb.d:ro
+    networks:
+      acme_lan:
+        ipv4_address: 172.22.0.12
+
+  # Agent SNMP simulé = "routeur de bordure" ACME ; community publique = 'public'.
+  snmp:
+    image: tandrup/snmpsim:v0.4
+    container_name: acme-snmp
+    hostname: acme-snmp
+    volumes:
+      - ./cibles/snmp:/usr/local/snmpsim/data:ro
+    networks:
+      acme_lan:
+        ipv4_address: 172.22.0.14
+
+networks:
+  acme_dmz:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+  acme_lan:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
