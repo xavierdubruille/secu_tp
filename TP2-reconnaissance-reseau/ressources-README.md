@@ -7,7 +7,9 @@ Lisez l'énoncé pour les exercices. Dans le dépôt étudiant, le Compose est d
 ## Démarrer
 
 ```bash
-sudo apt update; sudo apt install -y docker.io docker-compose
+sudo apt update; sudo apt install -y docker.io docker-compose   # si Docker est absent de votre Kali
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"   # puis fermer la session et se reconnecter
 git clone https://github.com/xavierdubruille/secu_tp.git
 cd secu_tp/TP2-reconnaissance-reseau
 bash verifier-labo.sh

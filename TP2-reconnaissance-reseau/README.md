@@ -36,6 +36,15 @@ suite obligatoire. Un même outil peut servir plusieurs objectifs selon le conte
 
 ## Démarrer
 
+**Docker absent de votre Kali ?** Installez-le d'abord, puis fermez votre session et reconnectez-vous :
+le groupe `docker` vous permet ensuite de lancer les cibles sans `sudo`.
+
+```bash
+sudo apt update; sudo apt install -y docker.io docker-compose
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+```
+
 Dans Kali, récupérez la dernière version des ressources, puis lancez les cibles :
 
 ```bash
