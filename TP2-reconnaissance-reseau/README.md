@@ -12,7 +12,7 @@ interroger ses services, comprendre ce qu'ils révèlent et recommander des prot
 À la fin, vous devez pouvoir :
 
 1. **Dresser une carte** des hôtes et services, en précisant les limites du scan.
-2. **Prouver et expliquer** un accès ou une fuite, avec ses conditions : invité, compte fourni, secret partagé.
+2. **Prouver et expliquer** un accès ou une fuite, avec ses conditions : invité (*guest*), compte fourni, secret partagé.
 3. **Choisir une protection** adaptée et dire comment vérifier qu'elle fonctionne.
 
 Vous remplissez progressivement une **fiche de surface d'attaque**. Une commande réussie est un
@@ -29,7 +29,7 @@ suite obligatoire. Un même outil peut servir plusieurs objectifs selon le conte
   Le serveur Apache de la mission 3 est autorisé sur `127.0.0.1:8080`. La mission 4 vise uniquement
   le conteneur local lancé pour cette extension.
 - Jamais le réseau de l'école, `ephec.be`, une IP publique ou la VM d'un camarade.
-- **Kali accède directement aux deux segments.** Cela ne représente pas un accès depuis Internet !,
+- **Kali accède directement aux deux segments.** Cela ne représente **ni un accès depuis Internet**,
   ni un pare-feu qui filtrerait entre ces segments. Les adresses `.1` sont les passerelles de Kali.
 - Les identités, données et secrets du labo sont fictifs. IA autorisée comme tuteur : vous devez
   pouvoir expliquer ce que vous faites et ce que vous rendez.
@@ -55,7 +55,7 @@ bash verifier-labo.sh --pret
 > MySQL et Samba peuvent demander environ 90 secondes au premier démarrage ; commencez par le
 > premier segment. Si le site du TP1 tourne encore sur 8080, arrêtez **ce labo TP1** avant la mission 3.
 
-Gardez les sorties et le PCAP dans `~/tp2-traces`, puis copiez-les dans votre dépôt personnel avant
+Gardez les outputs et le PCAP dans `~/tp2-traces`, puis copiez-les dans votre dépôt personnel avant
 la fin : les machines de salle ne sont pas une sauvegarde.
 
 ---
@@ -84,7 +84,7 @@ nmap -sV -oN ~/tp2-traces/scan-lan.txt 172.22.0.12,13,14
 ```
 
 Complétez la carte : IP, port/protocole, service, produit et version **si identifiés**. Une machine
-répond à la découverte mais n'a aucun port ouvert trouvé par ce scan TCP : pouvez-vous déjà
+répond au host discovery mais n'a aucun port ouvert trouvé par ce scan TCP : pouvez-vous déjà
 la dire « sans service » ? Le scan par défaut ne teste qu'une sélection de ports.
 
 Complétez le scan avec le port Redis du labo, parfois absent de cette sélection :
@@ -128,8 +128,8 @@ nmap -p6379 --script redis-info 172.21.0.13
 Retenez **une information nouvelle** révélée par NSE. À quoi sert-elle ? Est-ce une information de
 version, de configuration, ou une preuve de vulnérabilité ? Ajoutez-la à votre fiche.
 
-**Fini quand :** la carte couvre les sept cibles, les versions inconnues sont signalées, une sortie
-est enregistrée et vous pouvez expliquer une différence entre deux scans.
+**Fini quand :** la carte couvre les sept cibles, les versions inconnues sont signalées, un output
+est enregistré et vous pouvez expliquer une différence entre deux scans.
 
 **Avant la discussion :** choisissez deux observations utiles à un attaquant **et** à un défenseur.
 Pour chacune, dites aussi ce que votre preuve ne permet pas encore d'affirmer.
@@ -262,7 +262,7 @@ long suffirait-il à corriger l'absence de chiffrement ? Avez-vous prouvé qu'un
 Même cible et test de lecture de fichier que dans le labo d'origine. Le test est guidé : vous devez
 expliquer ce qu'il démontre, pas inventer un exploit.
 
-Depuis le dossier du TP2, lancez le serveur local et relevez sa bannière :
+Depuis le dossier du TP2, lancez le serveur local et relevez sa bannière (*banner*) :
 
 ```bash
 cd ~/secu_tp/TP2-reconnaissance-reseau
@@ -271,9 +271,9 @@ curl -sS -I http://127.0.0.1:8080/
 ```
 
 1. **Identifier.** Quel produit et quelle version annonce le serveur ? Retrouvez une vulnérabilité
-   associée avec `searchsploit apache 2.4.49`, puis lisez l'[avis Apache](https://httpd.apache.org/security/vulnerabilities_24.html#CVE-2021-41773).
+   associée avec `searchsploit apache 2.4.49`, puis lisez l'[avis de sécurité d'Apache](https://httpd.apache.org/security/vulnerabilities_24.html#CVE-2021-41773) (*security advisory*).
    Le produit/version suffit-il, ou existe-t-il aussi des conditions de configuration ?
-2. **Comparer.** Testez la requête ordinaire puis le test de traversée fourni par Vulhub :
+2. **Comparer.** Testez la requête ordinaire puis le test de path traversal fourni par Vulhub :
 
 ```bash
 curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/etc/passwd
@@ -292,7 +292,7 @@ et contrôle du système. Votre recommandation doit viser une version **maintenu
 **Avant la discussion :** quelle différence entre une vulnérabilité probable déduite d'une bannière
 et une vulnérabilité confirmée par ce test ?
 
-**Si vous avancez vite :** retrouvez la requête et son horodatage dans la trace du serveur :
+**Si vous avancez vite :** retrouvez la requête et son horodatage dans les logs du serveur :
 
 ```bash
 docker-compose -f apache-cve/docker-compose.yml logs --tail=30 apache
@@ -306,7 +306,7 @@ docker-compose -f apache-cve/docker-compose.yml logs --tail=30 apache
 
 **Facultative ; pour les groupes qui terminent en avance.** 
 Cette cible historique a été conservée pour rendre l'accès à un shell immédiatement visible.
-Son image pèse environ 600 Mo : téléchargez-la dés que possible si vous comptez la faire.
+Son image pèse environ 600 Mo : téléchargez-la dès que possible si vous comptez la faire.
 
 ```bash
 cd ~/secu_tp/TP2-reconnaissance-reseau
@@ -341,13 +341,13 @@ Complétez au fil des missions :
 - **Deux constats expliqués** : preuve, condition d'accès, risque et recommandation.
 - Une conclusion : que corriger en premier et comment vérifier ce choix sans casser les usages utiles ?
 
-Sauvegardez fiche, sorties de scan et PCAP. **Pour Moodle :** le format habituel, une capture d'un
+Sauvegardez fiche, outputs de scan et PCAP. **Pour Moodle :** le format habituel, une capture d'un
 résultat marquant + la commande + une phrase d'explication. Le barème précis reste sur Moodle.
 Faites apparaître votre matricule dans la preuve, par exemple avec
 `echo "TP2 - VOTRE_MATRICULE"` dans le terminal avant de rejouer la commande retenue.
 Les approfondissements ne remplacent pas une explication du travail commun.
 
-**Nettoyer à la fin**, depuis le dossier TP2 (mais si vous êtes en non-persistant, on s'en fou un peu):
+**Nettoyer à la fin**, depuis le dossier TP2 (mais si vous êtes en non-persistant, on s'en fout un peu):
 
 ```bash
 docker-compose -f apache-cve/docker-compose.yml down
@@ -360,11 +360,11 @@ docker-compose down
 À savoir **expliquer sur un cas fourni** :
 
 1. Passif/actif, périmètre autorisé et influence du point d'observation.
-2. Découverte d'hôtes, ports TCP/UDP, service/version ; limites d'un scan et rôle de NSE.
+2. Host discovery, ports TCP/UDP, service/version ; limites d'un scan et rôle de NSE.
 3. Différence entre accès invité, compte fourni, autorisation et secret exposé.
 4. Ce qu'une capture révèle en clair ; ce que le chiffrement protège et laisse observable.
 5. Version → avis de vulnérabilité → conditions → test ; path traversal et impact réellement prouvé.
-6. Une protection adaptée : droits/moins de privilèges, zones/filtrage, chiffrement ou correctif ;
+6. Une protection adaptée : droits/moindre privilège, zones/filtrage, chiffrement ou patch ;
    une tactique ATT&CK est un objectif, une technique un moyen, pas une étape obligatoire.
 
 **Outils :** savoir à quoi servent Nmap/NSE, smbclient, le client SQL, snmpwalk, tshark/Wireshark,
