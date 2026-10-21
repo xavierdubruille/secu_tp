@@ -13,19 +13,19 @@ if ! command -v searchsploit >/dev/null 2>&1; then
   printf 'INFO : searchsploit absent ; utiliser le guide Vulhub et l’avis Apache pour M3.\n'
 fi
 if ! command -v docker >/dev/null 2>&1; then
-  printf 'Préparation de la VM à terminer avant la séance.\n'
+  printf 'Docker absent : installez-le (énoncé, « Docker absent de votre Kali ? »).\n'
   exit 1
 fi
-if ! docker compose version >/dev/null 2>&1; then
-  printf 'MANQUANT : Docker Compose v2 (docker compose). Appeler le professeur.\n'
+if ! docker-compose version >/dev/null 2>&1; then
+  printf 'MANQUANT : docker-compose. Installez-le : sudo apt install -y docker-compose\n'
   exit 1
 fi
 if ! docker info >/dev/null 2>&1; then
-  printf 'Docker inaccessible : service démarré et droits de votre session à vérifier.\n'
+  printf 'Docker inaccessible : sudo systemctl enable --now docker ; sudo usermod -aG docker "$USER", puis reconnectez-vous.\n'
   exit 1
 fi
-docker compose config --quiet
-docker compose -f apache-cve/docker-compose.yml config --quiet
+docker-compose config --quiet
+docker-compose -f apache-cve/docker-compose.yml config --quiet
 if (( missing )); then
   printf 'Arrêt : préparer les outils avant le travail. Voir ressources-README.md.\n'
   exit 1
@@ -36,13 +36,13 @@ while IFS= read -r img; do
     printf 'À TÉLÉCHARGER : %s\n' "$img"
     absent=1
   fi
-done < <(docker compose config --images; docker compose -f apache-cve/docker-compose.yml config --images)
+done < <(docker-compose config --images; docker-compose -f apache-cve/docker-compose.yml config --images)
 if (( absent )); then
   printf 'OK : outils et Docker présents. Images absentes : le premier lancement les télécharge (connexion requise).\n'
 else
   printf 'OK : outils, Docker et images du tronc commun présents.\n'
 fi
-printf 'Démarrer : docker compose up -d\n'
+printf 'Démarrer : docker-compose up -d\n'
 printf 'MySQL et Samba peuvent demander environ 90 secondes au premier lancement.\n'
 
 if [[ "${1:-}" == "--pret" ]]; then
@@ -65,6 +65,6 @@ if [[ "${1:-}" == "--pret" ]]; then
     fi
     sleep 2
   done
-  printf 'Un service ne répond pas : montrer docker compose ps / logs au professeur.\n'
+  printf 'Un service ne répond pas : montrer docker-compose ps / logs au professeur.\n'
   exit 1
 fi

@@ -18,7 +18,7 @@
 #   acme_lan  172.22.0.0/24  — segment interne (partages SMB, base RH, SNMP)
 #
 # Hostname interne facultatif : exporter MATRICULE avant `up`
-#   ex.  MATRICULE=12345 docker compose up -d
+#   ex.  MATRICULE=12345 docker-compose up -d
 # (sinon "000"). Ce nom interne n’est pas automatiquement révélé par nmap/HTTP.
 # La preuve étudiante porte l’identifiant dans sa fiche, pas une bannière inventée.
 # =============================================================================

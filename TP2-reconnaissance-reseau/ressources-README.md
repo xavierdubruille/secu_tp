@@ -13,14 +13,14 @@ sudo usermod -aG docker "$USER"   # puis fermer la session et se reconnecter
 git clone https://github.com/xavierdubruille/secu_tp.git
 cd secu_tp/TP2-reconnaissance-reseau
 bash verifier-labo.sh
-docker compose up -d
+docker-compose up -d
 bash verifier-labo.sh --pret
 # Mission 3, quand vous y arrivez :
-docker compose -f apache-cve/docker-compose.yml up -d
+docker-compose -f apache-cve/docker-compose.yml up -d
 ```
 
 Le premier contrôle vérifie les outils et Docker Compose, et liste les images encore à télécharger,
-**sans rien installer**. `--pret` attend que les services ACME répondent. Une erreur ? Lisez les puis montrez-les moi (ou mieux, montrez les à une IA avec avec `docker compose ps` et `docker compose logs --tail=30` et en lui demandant si elle a besoin d'autre chose pour diagnostiquer le problème).
+**sans rien installer**. `--pret` attend que les services ACME répondent. Une erreur ? Lisez-les puis montrez-les-moi (ou mieux, montrez-les à une IA avec `docker-compose ps` et `docker-compose logs --tail=30` et en lui demandant si elle a besoin d'autre chose pour diagnostiquer le problème).
 
 Kali atteint les deux bridges Docker directement. Les cibles ACME ne publient aucun port ; Apache
 publie **seulement** `127.0.0.1:8080`. Ce n'est pas une simulation de pare-feu entre DMZ et LAN.
@@ -28,7 +28,7 @@ L'extension Metasploitable2 utilise son propre Compose et n'est pas nécessaire 
 
 ## Avant la séance : un premier lancement chez vous
 
-Le premier `docker compose up -d` télécharge et construit les images ; les suivants démarrent sans
+Le premier `docker-compose up -d` télécharge et construit les images ; les suivants démarrent sans
 réseau. Faites-le **avant le cours**, avec une bonne connexion, pour ne pas dépendre du réseau de
 l'école :
 
@@ -36,17 +36,17 @@ l'école :
 cd ~/secu_tp && git pull
 cd ~/secu_tp/TP2-reconnaissance-reseau
 bash verifier-labo.sh
-docker compose up -d
+docker-compose up -d
 bash verifier-labo.sh --pret
-docker compose -f apache-cve/docker-compose.yml build
-docker compose down
+docker-compose -f apache-cve/docker-compose.yml build
+docker-compose down
 ```
 
 Les images restent dans la VM après `down`. Un nouveau `bash verifier-labo.sh` ne doit plus rien
 lister « À TÉLÉCHARGER ». Facultatif, pour l'extension (image volumineuse) :
-`docker compose -f metasploitable/docker-compose.yml pull`.
+`docker-compose -f metasploitable/docker-compose.yml pull`.
 
-Les outils nécessaires sont Docker/Compose v2, Nmap, smbclient, client MySQL/MariaDB, snmpwalk,
+Les outils nécessaires sont Docker et docker-compose, Nmap, smbclient, client MySQL/MariaDB, snmpwalk,
 tshark, curl, nc et ip. Searchsploit sert à la recherche M3 ; le guide Vulhub et l'avis Apache
 permettent de poursuivre s'il manque. Le script de préparation de VM du cours installe ces outils.
 
@@ -72,9 +72,9 @@ Ne lancez pas les Compose des guides d'origine en parallèle : leurs adresses pe
 Depuis le dossier TP2 :
 
 ```bash
-docker compose -f apache-cve/docker-compose.yml down
-docker compose -f metasploitable/docker-compose.yml down
-docker compose down
+docker-compose -f apache-cve/docker-compose.yml down
+docker-compose -f metasploitable/docker-compose.yml down
+docker-compose down
 ```
 
 Les scans, votre fiche et le PCAP sont vos résultats : sauvegardez-les dans votre dépôt personnel (ou où vous voulez)
