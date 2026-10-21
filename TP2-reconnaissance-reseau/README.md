@@ -364,6 +364,28 @@ docker-compose -f metasploitable/docker-compose.yml down
 docker-compose down
 ```
 
+## Bonus — Deux challenges Root-Me (facultatif, individuel)
+
+Pour continuer chez vous sur des cibles où l'attaque est autorisée : validez **deux** des challenges
+Réseau de [Root-Me](https://www.root-me.org/) ci-dessous. Seuls les fichiers et serveurs fournis par
+ces challenges sont concernés ; le reste du cadre de la séance ne change pas.
+
+| Challenge | Ce qu'il prolonge |
+|---|---|
+| [FTP - Authentification](https://www.root-me.org/fr/Challenges/Reseau/FTP-Authentification) | M2d : un identifiant lu en clair dans une capture |
+| [ETHERNET - trame](https://www.root-me.org/fr/Challenges/Reseau/ETHERNET-trame) | lire une trame brute, champ par champ |
+| [DNS - transfert de zone](https://www.root-me.org/fr/Challenges/Reseau/DNS-transfert-de-zone) | passif/actif : demander toute la zone au DNS de la cible, ici un serveur prévu pour |
+| [SNMP - Authentification](https://www.root-me.org/fr/Challenges/Reseau/SNMP-Authentification) | SNMPv3 : ce que l'authentification protège, et ce qu'une capture permet encore (le plus difficile) |
+
+**À rendre sur Moodle avant le TP3, et nulle part ailleurs :** votre pseudo Root-Me et, pour chaque
+challenge, un constat au format de votre fiche (preuve, condition, risque, recommandation) en 5 à
+10 lignes. La preuve est la commande, le filtre ou la capture d'écran qui montre votre raisonnement,
+**sans le flag** : c'est l'explication qui est notée.
+
+- Root-Me interdit de publier les solutions : rien dans votre dépôt personnel, sur un blog ou entre vous.
+- Au début du TP3, quelques étudiants expliqueront leur challenge en une minute.
+- Bonus plafonné ; le barème est sur Moodle.
+
 ## Pour l'examen
 
 À savoir **expliquer sur un cas fourni** :
@@ -388,5 +410,5 @@ CVE/codes ATT&CK, noms des incidents, détails du shell optionnel. Pas de config
 - [Metasploitable 2](https://sourceforge.net/projects/metasploitable/), extension historique facultative.
 - [Documentation Nmap](https://nmap.org/book/) et [scripts NSE](https://nmap.org/nsedoc/) : chercher un
   script répondant à une question précise, plutôt que lancer une catégorie entière.
-- Pour prolonger l'analyse de traces : catégories Réseau/Forensic de Root-Me ou [Hackropole](https://hackropole.fr/),
-  hors des cibles de cette séance.
+- Pour prolonger l'analyse de traces au-delà du bonus : catégories Réseau/Forensic de Root-Me ou
+  [Hackropole](https://hackropole.fr/), hors des cibles de cette séance.
