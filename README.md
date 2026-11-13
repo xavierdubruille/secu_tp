@@ -23,6 +23,7 @@ Pour mettre à jour plus tard : `git pull`.
 |---|---|
 | [`TP1-osint/`](TP1-osint/) | TP1 — OSINT : l'empreinte d'une entreprise, du renseignement au phishing |
 | [`TP2-reconnaissance-reseau/`](TP2-reconnaissance-reseau/) | TP2 — Reconnaissance active : cartographie, énumération et preuve de vulnérabilité |
+| [`TP3-attaques-reseau/`](TP3-attaques-reseau/) | TP3 · Attaques réseau : ARP, DNS, TCP, qui croit qui ? |
 
 *(d'autres TP s'ajouteront au fil de l'année)*
 
