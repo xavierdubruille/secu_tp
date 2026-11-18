@@ -1,0 +1,23 @@
+# TP4 (et TP5) : cible OWASP Juice Shop, version figee.
+# Source : https://github.com/juice-shop/juice-shop (licence MIT). Image officielle.
+# Attribution : voir README.md de ce dossier.
+#
+# Lancer :  docker compose up -d      (puis http://127.0.0.1:3001)
+# Arreter : docker compose down
+#
+# BeEF n'est PAS dans ce compose : il tourne nativement dans Kali (paquet beef-xss,
+# `sudo beef-xss`), hook sur le port 3000. Voir README.md.
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:v20.3.0
+    container_name: tp4-juice-shop
+    # NODE_ENV=unsafe charge config/unsafe.yml : sans lui, Juice Shop neutralise
+    # les XSS stockees (verifie 15/11). Necessaire pour la mission 3 et la finale.
+    environment:
+      - NODE_ENV=unsafe
+    # Publie UNIQUEMENT sur la boucle locale : rien n'est expose au reseau.
+    # Juice Shop ecoute sur 3000 dans le conteneur, on l'expose sur 3001 cote hote.
+    ports:
+      - "127.0.0.1:3001:3000"
+    restart: unless-stopped
