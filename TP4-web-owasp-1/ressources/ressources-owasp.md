@@ -5,14 +5,14 @@ ou des projets ouverts.
 
 ## Comprendre
 
-- **OWASP Top 10 (édition 2025)** — les dix catégories de risque d'une application web, notre fil
-  rouge : <https://owasp.org/Top10/>
-- **OWASP Juice Shop** — l'application volontairement vulnérable du TP (projet OWASP, licence MIT) :
+- **OWASP Top 10 (édition 2025)** : les dix catégories de risque d'une application web, notre fil
+  rouge. <https://owasp.org/Top10/>
+- **OWASP Juice Shop** : l'application volontairement vulnérable du TP (projet OWASP, licence MIT).
   <https://owasp.org/www-project-juice-shop/>
 
-## Se défendre (côté développeur — l'essentiel pour l'examen)
+## Se défendre (côté développeur, l'essentiel pour l'examen)
 
-- **OWASP Cheat Sheet Series** — une fiche par sujet, les parades concrètes :
+- **OWASP Cheat Sheet Series** : une fiche par sujet, les parades concrètes.
   <https://cheatsheetseries.owasp.org/>
   - *SQL Injection Prevention* (requêtes paramétrées) :
     <https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html>
@@ -23,11 +23,11 @@ ou des projets ouverts.
 
 ## S'entraîner (à la maison)
 
-- **PortSwigger Web Security Academy** — labos interactifs gratuits (les auteurs de Burp Suite),
-  excellents pour SQL injection et XSS : <https://portswigger.net/web-security>
+- **PortSwigger Web Security Academy** : labos interactifs gratuits (les auteurs de Burp Suite),
+  bons pour la SQL injection et la XSS. <https://portswigger.net/web-security>
 
 > Un guide officiel de solutions pour Juice Shop existe (*Pwning OWASP Juice Shop*). Il **donne les
-> réponses** des défis : à garder pour **après** avoir cherché par vous-même, sinon le TP ne sert à rien.
+> réponses** des défis : à garder pour **après** avoir cherché par vous-même.
 
 ## Rappel vocabulaire (examen)
 

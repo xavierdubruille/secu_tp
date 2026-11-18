@@ -58,7 +58,7 @@ La recherche de produits, elle aussi, passe votre texte dans une requête SQL.
 
 ## Bonus (pour les rapides) · Du hash au mot de passe
 
-Parmi les données que vous avez fait remonter en mission 2, il y a des mots de passe… mais **hachés**. Dans cette boutique, ce sont des **hash MD5 sans sel** — exactement ce qu'il ne faut pas faire.
+Parmi les données que vous avez fait remonter en mission 2, il y a des mots de passe, mais **hachés**. Dans cette boutique, ce sont des **hash MD5 sans sel** : c'est ce qu'il ne faut pas faire.
 
 1. Récupérez un hash de mot de passe depuis votre extraction.
 2. Retrouvez le mot de passe d'origine. Un hash **rapide et sans sel** tombe en quelques secondes : soit par **dictionnaire** (un outil essaie des millions de mots de passe courants), soit via une **rainbow table** (une table de correspondances hash → mot de passe calculées à l'avance).
@@ -66,7 +66,7 @@ Parmi les données que vous avez fait remonter en mission 2, il y a des mots de 
 
 > **Fini quand** vous avez retrouvé au moins un mot de passe en clair à partir de son hash.
 
-**La parade (A04 Cryptographic Failures).** Un mot de passe ne se stocke jamais avec un hash rapide (MD5, SHA-1). On utilise une fonction **lente et salée** — **bcrypt** ou **argon2**. Le **sel**, unique par compte, rend les rainbow tables inutilisables (il faudrait en recalculer une pour chaque sel) ; la lenteur rend le brute force trop coûteux.
+**La parade (A04 Cryptographic Failures).** Un mot de passe ne se stocke jamais avec un hash rapide (MD5, SHA-1). On utilise une fonction **lente et salée**, comme **bcrypt** ou **argon2**. Le **sel**, unique par compte, rend les rainbow tables inutilisables (il faudrait en recalculer une pour chaque sel) ; la lenteur rend le brute force trop coûteux.
 
 ## Mission 3 · Faire exécuter votre code chez un autre utilisateur
 
@@ -76,13 +76,13 @@ Parmi les données que vous avez fait remonter en mission 2, il y a des mots de 
 
 > **Fini quand** vous distinguez une XSS déclenchée par votre propre URL d'une XSS déclenchée quand un autre utilisateur consulte une donnée stockée.
 
-**Défense.** Encoder la sortie selon son contexte (HTML, attribut, JavaScript ne s'encodent pas pareil), pour que votre texte reste du texte. En appui : cookies de session en `HttpOnly` (le JavaScript ne lit plus la session) et une CSP qui limite ce qu'une page peut charger. La plupart des frameworks encodent par défaut — on ne désactive pas cette protection.
+**Défense.** Encoder la sortie selon son contexte (HTML, attribut, JavaScript ne s'encodent pas pareil), pour que votre texte reste du texte. En appui : cookies de session en `HttpOnly` (le JavaScript ne lit plus la session) et une CSP qui limite ce qu'une page peut charger. La plupart des frameworks encodent par défaut : on ne désactive pas cette protection.
 
 ## Finale · BeEF en binôme
 
 En binôme, un Attaquant et une Victime ; vous inverserez les rôles si vous avez l'occasion (et vous la jouez schizophrène si vous êtes seul ;) . On reprend la XSS stockée de la mission 3, mais cette fois elle charge un *hook* BeEF : l'Attaquant pilote le navigateur de la Victime à distance.
 
-**Montage.** L'idéal est d'avoir un site distant, et victime sur une machine et attaquant sur une autre.  Pas sûr que ça fonctionne niveau réseau, alors on va faire au mieux (on en parle en classe) et, en fallback: une seule VM par binôme, deux profils de navigateur bien séparés — pas deux onglets du même profil, qui partagent les cookies et brouillent la démo. La cible et BeEF tournent dans cette VM. Entre deux postes : seulement si le prof a testé le réseau de la salle.
+**Montage.** L'idéal est d'avoir un site distant, et victime sur une machine et attaquant sur une autre.  Pas sûr que ça fonctionne niveau réseau, alors on va faire au mieux (on en parle en classe) et, en fallback: une seule VM par binôme, deux profils de navigateur bien séparés, pas deux onglets du même profil, qui partagent les cookies et brouillent la démo. La cible et BeEF tournent dans cette VM. Entre deux postes : seulement si le prof a testé le réseau de la salle.
 
 **Déroulé.**
 1. L'Attaquant reprend la XSS stockée de la mission 3 et y met le hook BeEF à la place du marqueur (le prof donne la ligne ; BeEF l'affiche à son démarrage).
