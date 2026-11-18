@@ -56,6 +56,18 @@ La recherche de produits, elle aussi, passe votre texte dans une requête SQL.
 
 **Défense.** La même qu'en mission 1 : requête paramétrée. En plus, des messages d'erreur avares : une application qui affiche ses erreurs SQL en clair indique à l'attaquant le bon nombre de colonnes. sqlmap va plus vite que vous, mais il n'invente pas l'hypothèse : il l'amplifie.
 
+## Bonus (pour les rapides) · Du hash au mot de passe
+
+Parmi les données que vous avez fait remonter en mission 2, il y a des mots de passe… mais **hachés**. Dans cette boutique, ce sont des **hash MD5 sans sel** — exactement ce qu'il ne faut pas faire.
+
+1. Récupérez un hash de mot de passe depuis votre extraction.
+2. Retrouvez le mot de passe d'origine. Un hash **rapide et sans sel** tombe en quelques secondes : soit par **dictionnaire** (un outil essaie des millions de mots de passe courants), soit via une **rainbow table** (une table de correspondances hash → mot de passe calculées à l'avance).
+3. Mesurez le temps que ça prend, et dites pourquoi c'est si rapide.
+
+> **Fini quand** vous avez retrouvé au moins un mot de passe en clair à partir de son hash.
+
+**La parade (A04 Cryptographic Failures).** Un mot de passe ne se stocke jamais avec un hash rapide (MD5, SHA-1). On utilise une fonction **lente et salée** — **bcrypt** ou **argon2**. Le **sel**, unique par compte, rend les rainbow tables inutilisables (il faudrait en recalculer une pour chaque sel) ; la lenteur rend le brute force trop coûteux.
+
 ## Mission 3 · Faire exécuter votre code chez un autre utilisateur
 
 1. Réalisez le défi **DOM XSS** depuis le champ de recherche : votre texte s'exécute dans votre propre page.
